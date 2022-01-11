@@ -9,9 +9,9 @@ import Menu from "./components/Menu";
 const useStyles = makeStyles({
   root: {
     width:'100%',
-    minHeight: '100%',
+    minHeight: '100vh',
     background:'#eceff1',
-    paddingBottom:'40px'
+    paddingBottom:'10px'
   }
   
 });

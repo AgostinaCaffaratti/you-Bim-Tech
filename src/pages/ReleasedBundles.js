@@ -1,10 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import { Paper, Typography } from '@material-ui/core'
+import { Button, Paper, Typography } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import {useDispatch, useSelector} from 'react-redux'
 import {deleteBundle} from '../state/reducer'
+import { width } from '@mui/system'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +20,15 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: 20,
   },
+  bundle:{
+    marginTop:'20px',
+    padding:'10px',
+  },
+  bundleHeader:{
+    display: 'flex',
+    justifyContent: 'space-between',
+    width:'100%'
+  }
 }))
 
 const ReleasedBundles = () => {
@@ -30,15 +40,30 @@ const ReleasedBundles = () => {
   const dispatch = useDispatch()
 
   
-  
   return (
     <div className={classes.root}>
       <Grid item xs={12} container>
          <Paper className={classes.paper}>       
-              <Typography>Currently Bundled</Typography>
+              <Typography variant='h4'>Currently Bundled</Typography>
              <Grid>
-               {bundles.map((item, index) => {                  
-          return <ItemCard key={index} data={item.item} deleteItem={() => dispatch(deleteBundle(index))}   />
+               {bundles.map((item, index) => {   
+                 return( 
+                 <div className={classes.bundle}>
+                   <div className={classes.bundleHeader}>
+                   <Typography variant='h5'>{item.title}</Typography>
+                   <div>
+                   <Button> print </Button>
+                   <Button variant="contained"  color='secondary' onClick={() => dispatch(deleteBundle(index))}>Delete</Button>
+                   </div>
+
+                   </div>
+                   
+                   {item?.items.map((item,index) => {
+
+          return <ItemCard key={index} data={item.item} isBundle={true} />
+                   })}
+                 </div> 
+                 )             
            })}
             </Grid> 
           </Paper>

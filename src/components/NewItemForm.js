@@ -1,8 +1,6 @@
 import {
   Button,
-  FormControl,
   FormControlLabel,
-  FormLabel,
   Grid,
   makeStyles,
   Radio,
@@ -28,16 +26,18 @@ const usestyle = makeStyles((theme) => ({
     justifyContent:'space-between',
   },
   radioContainer:{
-    marginRight:'245px'
-  },
-  orderInput:{
-    width:'100px',
-    marginRight:'350px',
-  },
- 
-  button: {
-    marginTop: '50px',
-    marginLeft:'180px',
+  display:'flex',
+  flexDirection:'row',
+  justifyContent:'flex-start',
+  width: '70%'
+    },
+    orderField:{
+      width:'100px',
+      marginRight:'58%'
+    },
+   button: {
+    marginTop: '10px',
+    marginLeft:'205px',
     background:'##00BFFF'
   },
 }))
@@ -47,11 +47,12 @@ const initializeItem = {
   description:'',
   price: 0,
   type :'single',
-  order:''
+  order:0
 }
 
 const NewItemForm = () => {
   const [item, setItem] = useState(initializeItem) 
+  const [errors, setErrors] = useState({})
   const classes = usestyle()
   const dispatch = useDispatch()
  
@@ -65,20 +66,45 @@ const NewItemForm = () => {
   }
 
   const HandleSubmitt = (e) => {
-    e.preventDefault()   
-    dispatch(createItem({item}))    
-    setItem(initializeItem)    
+    if (validate()){
+      e.preventDefault()   
+      dispatch(createItem({item}))    
+      setItem(initializeItem)  
+    }  
   }
 
+  const validate = () => {
+    let temp = {}
+    temp.code ={
+      hasError: item.code ? (item.code.length > 14 ? false : true ) : true,
+      errorText: item.code ? (item.code.length > 14 ? '' : 'Up to 14 characters')  : 'This field is required'
+    } 
+    temp.description = {
+      hasError: item.description ? false : true,
+      errorText: item.description ? '' : 'This field is required'
+    } 
+   temp.price = {
+      hasError: item.price >=! 0  ,
+      errorText:item.price >= 0 ? '' : 'Number equal or greater than 0'
+    } 
+    temp.order = {
+      hasError:  item.order >=! 0,
+      errorText : item.order >= 0 ? '' : 'Number equal or greater than 0'
+    } 
+    
+    setErrors({...temp})
+
+
+    return temp.code.errorText === '' ? true : false && temp.description.errorText === '' ? true : false && temp.price.errorText === '' ? true : false && temp.order.errorText === '' ? true : false
+
+  }
   
 
   return (
     <form className={classes.root}>
-      <Grid >
-        <Grid item xs={12}>
           <Grid className={classes.fieldContainer}>           
               <Typography>Code:</Typography>           
-            <TextField  required variant="outlined" value={item.code} name="code" onChange={handleChange} className={classes.inputField} />
+            <TextField error={errors.code?.hasError} helperText={errors.code?.errorText}  variant="outlined" value={item.code} name="code" onChange={handleChange}  />
           </Grid>
           <Grid className={classes.fieldContainer}>
               <Typography>Description:</Typography>
@@ -89,30 +115,30 @@ const NewItemForm = () => {
               name="description"
               onChange={handleChange}
               rows={5}
+              error={errors.description?.hasError}
+              helperText={errors.description?.errorText}
             />
           </Grid>
           <Grid className={classes.fieldContainer}>
               <Typography>Price:</Typography>
-            <TextField type='number' variant="outlined" name="price" value={item.price} onChange={handleChange} />
+            <TextField  type='number' variant="outlined" name="price" value={item.price} onChange={handleChange} error={errors.price?.hasError} helperText={errors.price?.errorText} />
           </Grid>
           <Grid className={classes.fieldContainer} >
                 <Typography>Type:</Typography>
               <RadioGroup row name="type" value={item.type} onChange={handleChange} className={classes.radioContainer} >
-                <FormControlLabel value="single" control={<Radio />} label="Simple" />
+                <FormControlLabel value="single" control={<Radio />} label="Single" />
                 <FormControlLabel value="multiple" control={<Radio />} label="Multiple" />
               </RadioGroup>
           </Grid>
           <Grid className={classes.fieldContainer}>
               <Typography>Order:</Typography>
-              <Box className={classes.orderInput}>
-            <TextField variant="outlined" name="order" value={item.order} onChange={handleChange} />
-              </Box>
+              <div className={classes.orderField}>
+            <TextField  variant="outlined" name="order" type='number' value={item.order} onChange={handleChange} error={errors.order?.hasError} helperText={errors.order?.errorText}  />
+              </div>
           </Grid>
             <Button className={classes.button}  variant="contained" color="primary" onClick={HandleSubmitt}>
               Create Item
             </Button>
-        </Grid>
-      </Grid>
     </form>
   )
 }

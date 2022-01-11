@@ -9,7 +9,7 @@ import { CardHeader, Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
-    width:'95%',
+    width:'100%',
     height:180,
     marginTop:10,
     marginBottom:10
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   }
 });
 
-export const ItemCard = ({data, index, deleteItem, isAvailable, addBundle, addCurrent, deleteBundle}) => {
+export const ItemCard = ({data, index, deleteItem, isAvailable, addBundle, addCurrent, deleteBundle, isBundle}) => {
 
 
 
@@ -35,8 +35,8 @@ export const ItemCard = ({data, index, deleteItem, isAvailable, addBundle, addCu
     <Card className={classes.root} variant="outlined">
     <CardHeader title={code}
     action={
-      isAvailable ? <Button onClick={addCurrent}>Add to Bundle</Button> :
-          <Button variant="contained"  color='secondary' onClick={deleteItem}>Delete</Button>
+      isAvailable ? <Button onClick={addCurrent}>Add to Bundle</Button> : 
+         isBundle ? <Typography variant='h4'>${price}</Typography> : <Button variant="contained"  color='secondary' onClick={deleteItem}>Delete</Button>
         }>
     </CardHeader>
     <Divider ></Divider>

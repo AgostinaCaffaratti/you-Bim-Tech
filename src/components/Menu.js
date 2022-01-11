@@ -8,6 +8,7 @@ import { withRouter, NavLink } from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
   root: {
     // flexGrow: 1,
+    background:'#0D293B'
   },
   menuButton: {
     // marginRight: theme.spacing(2),
@@ -24,9 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     '&.active': {
-      background: '#ADD8E6',
+      background: '#087CE8',
     },
-    height:'70px'
+    height:'70px',
+    color:'white',
+    marginRight:'20px'
 
   },
 }))
@@ -47,7 +50,7 @@ const Header = (props) => {
             </Button>
             <Button className={classes.button} component={NavLink} to="releasedBundles">
               Released Bundles
-            </Button>{' '}
+            </Button>
           </div>
         </Toolbar>
       </AppBar>

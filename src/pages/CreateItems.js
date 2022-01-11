@@ -6,12 +6,11 @@ import { Box, Paper } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import {useDispatch, useSelector} from 'react-redux'
 import {deleteItem } from '../state/reducer'
-import { minHeight } from '@mui/system'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: '#eceff1',
-    height: '100%',
+    height: '85vh',
     
   },
 
@@ -24,12 +23,18 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     // width: '100px',
-    minHeight:'90%'
+    minHeight:'100%'
   },
 
   form:{
-    width:'50%',
+    width:'40%',
     justifyContent:'flex-end'
+  },
+
+  cardsContainer:{
+    display:'flex',
+    flexDirection: 'column',
+    justifyContent:'flexStart'
   }
 }))
 
@@ -43,10 +48,10 @@ const CreateItems = () => {
   return (
     <Box className={classes.root}>
           <Paper className={classes.paper}>
-            <Box className={classes.form}>
+            <div className={classes.form}>
             <NewItemForm  />
-            </Box>
-        <Grid item xs={6} container >
+            </div>
+        <Grid item xs={6} container className={classes.cardsContainer} >
         {items.map((item, index) => {        
           return <ItemCard key={index} data={item.item} deleteItem={() => dispatch(deleteItem(index)) } />
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import { Button, Paper, Typography } from '@material-ui/core'
+import { Button, Paper, TextField, Typography } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteItem, addBundle} from '../state/reducer'
@@ -9,7 +9,7 @@ import { deleteItem, addBundle} from '../state/reducer'
 const useStyles = makeStyles((theme) => ({
   root: {
     background: '#eceff1',
-    height: '100%',
+    height: '100vh',
 
   },
 
@@ -25,6 +25,10 @@ padding:'20px'
   },
   items:{
     width:'49%',
+  },
+
+  button :{
+    marginTop:20
   }
 }))
 
@@ -39,8 +43,9 @@ const CreateBundle = () => {
 
   const [current, setCurrent] = useState([])
 
-  const [price, setPrice] = useState(0)
-  console.log(current)
+  const [price, setPrice] = useState([])
+
+  const [title, setTitle] = useState('')
 
   const dispatch = useDispatch()
 
@@ -50,36 +55,30 @@ const CreateBundle = () => {
 
   const handleCurrent = (item) => {
     setCurrent([...current, item])
-    console.log(current)
-    console.log(totalCurrent(current, 'price'))
-    setPrice(totalCurrent(current, 'price'))
+    const itemPrice = item.item.price
+    setPrice([...price, Number(itemPrice)])
   }
 
-  const totalCurrent = () => {    
-   const res =  current.reduce( (acc,item) => {
-     return acc += parseInt(item.price)
-   },0)  
-setPrice(res)
-   console.log(res)
-    
-    
-  }
+
 
   const addToBundle = (item) => {
-    dispatch(addBundle(item))
-    console.log(item)
+    dispatch(addBundle({title: title, items: current, totalPrice: totalPrice}))
     setCurrent([])
+    setTitle('')
     
   }
 
   const deleteCurrent = (index) => {
      const updatedCurrents = current.filter(({item,index}) => index !== item[index])
      setCurrent(updatedCurrents)
-
-   
-
-    console.log(index)
   }
+
+  const handleChange = (e) => {
+    const {  value } = e.target
+setTitle(value)  }
+
+  const totalPrice = price.reduce((a, b) => a + b, 0);
+
 
   return (
     <div className={classes.root}>
@@ -113,8 +112,12 @@ setPrice(res)
                   )
                 })}
               </Grid>
-              <Typography>$520</Typography>
-              <Button variant="contained" color="primary" onClick={() => addToBundle(current)}>
+              <Typography variant='h4'>${totalPrice}</Typography>
+              <Grid className={classes.fieldContainer}>           
+              <Typography>Bundle Name</Typography>           
+            <TextField  required variant="outlined" value={title} name="title" onChange={handleChange} className={classes.inputField} />
+          </Grid>
+              <Button variant="contained" color="primary" onClick={() => addToBundle(current)} className={classes.button}>
                 Accept bundle
               </Button>
               </>
