@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: theme.palette.text.secondary,
     width: '100%',
+    height:'100vh',
     margin: 20,
   },
   bundle:{

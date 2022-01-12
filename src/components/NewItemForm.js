@@ -11,36 +11,7 @@ import {
 import React, { useState } from 'react'
 import {createItem} from '../state/reducer'
 import {useDispatch} from 'react-redux'
-import { Box } from '@mui/system'
 
-const usestyle = makeStyles((theme) => ({
-  root: {
-    '& .MuiFormControl-root': {
-      width: '70%',
-      margin: theme.spacing(1),
-    }, 
-  },
-  fieldContainer:{
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-  },
-  radioContainer:{
-  display:'flex',
-  flexDirection:'row',
-  justifyContent:'flex-start',
-  width: '70%'
-    },
-    orderField:{
-      width:'100px',
-      marginRight:'58%'
-    },
-   button: {
-    marginTop: '10px',
-    marginLeft:'205px',
-    background:'##00BFFF'
-  },
-}))
 
 const initializeItem = {
   code : '',
@@ -76,8 +47,8 @@ const NewItemForm = () => {
   const validate = () => {
     let temp = {}
     temp.code ={
-      hasError: item.code ? (item.code.length > 14 ? false : true ) : true,
-      errorText: item.code ? (item.code.length > 14 ? '' : 'Up to 14 characters')  : 'This field is required'
+      hasError: item.code ? (item.code.length < 14 ? false : true ) : true,
+      errorText: item.code ? (item.code.length < 14 ? '' : 'Up to 14 characters')  : 'This field is required'
     } 
     temp.description = {
       hasError: item.description ? false : true,
@@ -142,5 +113,34 @@ const NewItemForm = () => {
     </form>
   )
 }
+
+const usestyle = makeStyles((theme) => ({
+  root: {
+    '& .MuiFormControl-root': {
+      width: '70%',
+      margin: theme.spacing(1),
+    }, 
+  },
+  fieldContainer:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+  },
+  radioContainer:{
+  display:'flex',
+  flexDirection:'row',
+  justifyContent:'flex-start',
+  width: '70%'
+    },
+    orderField:{
+      width:'100px',
+      marginRight:'58%'
+    },
+   button: {
+    marginTop: '10px',
+    marginLeft:'205px',
+    background:'##00BFFF'
+  },
+}))
 
 export default NewItemForm

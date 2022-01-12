@@ -7,11 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteItem, addBundle} from '../state/reducer'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    background: '#eceff1',
-    height: '100vh',
-
-  },
 
   paper: {
     margin:'20px',
@@ -20,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
     display:'flex',
     flexDirection:'row',
     justifyContent:'space-between',
-minHeight:'90%',
-padding:'20px'
+    minHeight:'100vh',
+    padding:'20px'
   },
   items:{
     width:'49%',
@@ -37,13 +32,12 @@ const CreateBundle = () => {
 
   const items = useSelector((state) => state.items.items)
 
-  const bundles = useSelector((state) => state.bundles.bundles)
-
   const [isAvailable, setIsAvailable] = useState(false)
 
   const [current, setCurrent] = useState([])
 
   const [price, setPrice] = useState([])
+
 
   const [title, setTitle] = useState('')
 
@@ -79,9 +73,9 @@ setTitle(value)  }
 
   const totalPrice = price.reduce((a, b) => a + b, 0);
 
+ 
 
   return (
-    <div className={classes.root}>
       <Paper className={classes.paper}>
             <Grid className={classes.items}>
               <Typography variant='h4'>Available Items</Typography>
@@ -108,6 +102,9 @@ setTitle(value)  }
                       key={index}
                       data={item.item}
                       deleteItem={() => deleteCurrent(index)}
+                      isMultiple={ item.item.type === 'multiple'}
+                    
+  
                     />
                   )
                 })}
@@ -124,7 +121,6 @@ setTitle(value)  }
         ) : null}
           </Grid>
       </Paper>
-    </div>
   )
 }
 
