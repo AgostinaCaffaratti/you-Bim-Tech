@@ -14,6 +14,7 @@ import {useDispatch} from 'react-redux'
 
 
 const initializeItem = {
+  id: Math.random(),
   code : '',
   description:'',
   price: 0,
@@ -55,7 +56,7 @@ const NewItemForm = () => {
       errorText: item.description ? '' : 'This field is required'
     } 
    temp.price = {
-      hasError: item.price >=! 0  ,
+      hasError: item.price >= 0 ? false : true ,
       errorText:item.price >= 0 ? '' : 'Number equal or greater than 0'
     } 
     temp.order = {
@@ -101,12 +102,12 @@ const NewItemForm = () => {
                 <FormControlLabel value="multiple" control={<Radio />} label="Multiple" />
               </RadioGroup>
           </Grid>
-          <Grid className={classes.fieldContainer}>
+          {/* <Grid className={classes.fieldContainer}>
               <Typography>Order:</Typography>
               <div className={classes.orderField}>
             <TextField  variant="outlined" name="order" type='number' value={item.order} onChange={handleChange} error={errors.order?.hasError} helperText={errors.order?.errorText}  />
               </div>
-          </Grid>
+          </Grid> */}
             <Button className={classes.button}  variant="contained" color="primary" onClick={HandleSubmitt}>
               Create Item
             </Button>

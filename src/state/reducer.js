@@ -40,7 +40,6 @@ export const bundleReducer = (state = initBundleState, action) => {
   }
 
   export const deleteItem = (index) => {
-    console.log('action' )
     return {
       type: '@items/deleted',
       payload: index     
@@ -48,7 +47,6 @@ export const bundleReducer = (state = initBundleState, action) => {
   }
 
   export const addBundle = (item) => {   
-   console.log(item)
     return {
       type: '@bundle/added',
       payload: item  
@@ -57,7 +55,6 @@ export const bundleReducer = (state = initBundleState, action) => {
 
   
   export const deleteBundle = (index) => {
-    console.log(index)
     return {
       type: '@bundle/deleted',
       payload: index     

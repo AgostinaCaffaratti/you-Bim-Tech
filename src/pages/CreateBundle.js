@@ -61,9 +61,10 @@ const CreateBundle = () => {
     setTitle('')
     
   }
+  console.log(current)
 
-  const deleteCurrent = (index) => {
-     const updatedCurrents = current.filter(({item,index}) => index !== item[index])
+  const deleteCurrent = (code) => {
+     const updatedCurrents = current.filter((item) => item.item.code !== code )
      setCurrent(updatedCurrents)
   }
 
@@ -101,7 +102,7 @@ setTitle(value)  }
                     <ItemCard
                       key={index}
                       data={item.item}
-                      deleteItem={() => deleteCurrent(index)}
+                      deleteItem={() => deleteCurrent(item.item.code)}
                       isMultiple={ item.item.type === 'multiple'}
                     
   

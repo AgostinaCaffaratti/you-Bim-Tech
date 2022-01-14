@@ -5,7 +5,6 @@ import { Button, Paper, Typography } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import {useDispatch, useSelector} from 'react-redux'
 import {deleteBundle} from '../state/reducer'
-import { width } from '@mui/system'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +41,6 @@ const ReleasedBundles = () => {
 
   
   return (
-    <div className={classes.root}>
       <Grid item xs={12} container>
          <Paper className={classes.paper}>       
               <Typography variant='h4'>Currently Bundled</Typography>
@@ -70,7 +68,6 @@ const ReleasedBundles = () => {
           </Paper>
           
         </Grid> 
-    </div>
   )
 }
 
