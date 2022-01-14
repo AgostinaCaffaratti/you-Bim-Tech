@@ -8,13 +8,12 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {createItem} from '../state/reducer'
 import {useDispatch} from 'react-redux'
 
 
 const initializeItem = {
-  id: Math.random(),
   code : '',
   description:'',
   price: 0,
@@ -24,28 +23,12 @@ const initializeItem = {
 
 const NewItemForm = () => {
   const [item, setItem] = useState(initializeItem) 
+  console.log('createdItem', item)
   const [errors, setErrors] = useState({})
   const classes = usestyle()
   const dispatch = useDispatch()
- 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setItem({
-      ...item,
-      [name]: value,
-    })
-  }
-
-  const HandleSubmitt = (e) => {
-    if (validate()){
-      e.preventDefault()   
-      dispatch(createItem({item}))    
-      setItem(initializeItem)  
-    }  
-  }
-
-  const validate = () => {
+  const validate = useCallback(() => {
     let temp = {}
     temp.code ={
       hasError: item.code ? (item.code.length < 14 ? false : true ) : true,
@@ -56,8 +39,8 @@ const NewItemForm = () => {
       errorText: item.description ? '' : 'This field is required'
     } 
    temp.price = {
-      hasError: item.price >= 0 ? false : true ,
-      errorText:item.price >= 0 ? '' : 'Number equal or greater than 0'
+      hasError: parseInt(item.price) >= 0 ? false : true ,
+      errorText:parseInt(item.price) >= 0 ? '' : 'Number equal or greater than 0'
     } 
     temp.order = {
       hasError:  item.order >=! 0,
@@ -69,8 +52,26 @@ const NewItemForm = () => {
 
     return temp.code.errorText === '' ? true : false && temp.description.errorText === '' ? true : false && temp.price.errorText === '' ? true : false && temp.order.errorText === '' ? true : false
 
-  }
-  
+  },[item.code, item.description, item.order, item.price]
+  ) 
+
+
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target
+    setItem({
+      ...item,
+      [name]: value,
+    })
+  },[item]) 
+
+  const HandleSubmitt = useCallback((e) => {
+    if (validate()){
+      e.preventDefault()   
+      dispatch(createItem({item}))    
+      setItem(initializeItem)  
+    }  
+  },[item, dispatch, validate]) 
+
 
   return (
     <form className={classes.root}>

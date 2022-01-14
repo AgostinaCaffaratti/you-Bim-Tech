@@ -32,15 +32,22 @@ const useStyles = makeStyles({
   }
 });
 
-export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle, isMultiple = false}) => {
+export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle, isMultiple = false, setPrices = ()=>{}, prices=[]}) => {
 
 
   const {code, description, price, type } = data
   
-    
   const classes = useStyles();
 
+  const [multiplierValue, setMultiplierValue] = useState(1)
 
+  const totalPartialPrice =  multiplierValue * parseInt(price)
+
+  const handleMultiplierChange = (e) => {
+      const {  value } = e.target
+  setMultiplierValue( value === '' ? 1 : parseInt(value))  
+  setPrices([...prices, totalPartialPrice])
+}
 
   return (
     <Card className={classes.root} variant="outlined">
@@ -64,10 +71,10 @@ export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle,
         {isMultiple ? 
         <div className={classes.multiplier} >
           <div className={classes.inputField}>
-          <TextField   type='number' variant="outlined" value={0} name="multiplier"   /> 
+          <TextField   type='number' variant="outlined" value={multiplierValue} onChange={handleMultiplierChange} name="multiplier"   /> 
           </div>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
-        {`$${price * 1}`}
+        {`$${totalPartialPrice}`}
         </Typography>
         </div> 
         :

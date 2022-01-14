@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import { Button, Paper, TextField, Typography } from '@material-ui/core'
@@ -31,12 +31,14 @@ const CreateBundle = () => {
   const classes = useStyles()
 
   const items = useSelector((state) => state.items.items)
-
+console.log('items',items)
   const [isAvailable, setIsAvailable] = useState(false)
 
   const [current, setCurrent] = useState([])
+console.log('currently bundled',current)
 
-  const [price, setPrice] = useState([])
+  const [prices, setPrices] = useState([])
+  console.log('partialPrices', prices)
 
 
   const [title, setTitle] = useState('')
@@ -47,32 +49,31 @@ const CreateBundle = () => {
     setIsAvailable(true)
   }, [])
 
-  const handleCurrent = (item) => {
+  const handleCurrent = useCallback((item) => {
     setCurrent([...current, item])
-    const itemPrice = item.item.price
-    setPrice([...price, Number(itemPrice)])
-  }
+    const itemPrice = parseInt(item.item.price)
+    setPrices([...prices, itemPrice])
+  },[current,prices]) 
+
+  const totalPrice = useMemo(()=> prices.reduce((a, b) => a + b, 0),[prices]) ;
 
 
-
-  const addToBundle = (item) => {
+  const addToBundle = useCallback( (item) => {
     dispatch(addBundle({title: title, items: current, totalPrice: totalPrice}))
     setCurrent([])
     setTitle('')
     
-  }
-  console.log(current)
+  },[current,dispatch,title,totalPrice])
 
-  const deleteCurrent = (code) => {
-     const updatedCurrents = current.filter((item) => item.item.code !== code )
-     setCurrent(updatedCurrents)
-  }
+  const deleteCurrent = useCallback((code) => {
+    const updatedCurrents = current.filter((item) => item.item.code !== code )
+    setCurrent(updatedCurrents)
+ },[current]) 
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const {  value } = e.target
-setTitle(value)  }
+setTitle(value)  },[]) 
 
-  const totalPrice = price.reduce((a, b) => a + b, 0);
 
  
 
@@ -104,8 +105,9 @@ setTitle(value)  }
                       data={item.item}
                       deleteItem={() => deleteCurrent(item.item.code)}
                       isMultiple={ item.item.type === 'multiple'}
-                    
-  
+                      setPrices={setPrices}
+                      prices={prices}
+
                     />
                   )
                 })}
