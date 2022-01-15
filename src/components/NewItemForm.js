@@ -14,16 +14,18 @@ import {useDispatch} from 'react-redux'
 
 
 const initializeItem = {
+  id: Math.random(),
   code : '',
   description:'',
   price: 0,
   type :'single',
-  order:0
+  order:0,
+  totalPrice:0,
+  multiplier:0,
 }
 
 const NewItemForm = () => {
   const [item, setItem] = useState(initializeItem) 
-  console.log('createdItem', item)
   const [errors, setErrors] = useState({})
   const classes = usestyle()
   const dispatch = useDispatch()
@@ -103,12 +105,6 @@ const NewItemForm = () => {
                 <FormControlLabel value="multiple" control={<Radio />} label="Multiple" />
               </RadioGroup>
           </Grid>
-          {/* <Grid className={classes.fieldContainer}>
-              <Typography>Order:</Typography>
-              <div className={classes.orderField}>
-            <TextField  variant="outlined" name="order" type='number' value={item.order} onChange={handleChange} error={errors.order?.hasError} helperText={errors.order?.errorText}  />
-              </div>
-          </Grid> */}
             <Button className={classes.button}  variant="contained" color="primary" onClick={HandleSubmitt}>
               Create Item
             </Button>

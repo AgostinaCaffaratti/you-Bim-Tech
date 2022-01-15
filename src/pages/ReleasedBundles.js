@@ -6,6 +6,47 @@ import { ItemCard } from '../components/ItemCard'
 import {useDispatch, useSelector} from 'react-redux'
 import {deleteBundle} from '../state/reducer'
 
+
+
+const ReleasedBundles = () => {
+  const classes = useStyles()
+
+  
+  const bundles = useSelector(state => state.bundles.bundles)
+
+  const dispatch = useDispatch()
+  
+  return (
+      <Grid item xs={12} container>
+         <Paper className={classes.paper}>       
+              <Typography variant='h4'>Currently Bundled</Typography>
+             <Grid>
+               {bundles.map((item, index) => {   
+                 return( 
+                 <div key={index} className={classes.bundle}>
+                   <div className={classes.bundleHeader}>
+                   <Typography variant='h5'>{item.title}</Typography>
+                   <div>
+                   <Button> print </Button>
+                   <Button variant="contained"  color='secondary' onClick={() => dispatch(deleteBundle(index))}>Delete</Button>
+                   </div>
+
+                   </div>
+                   
+                   {item?.items.map((item,index) => {
+
+          return <ItemCard key={index} data={item.item} total={item.item.tPrice} isBundle={true} />
+                   })}
+                 </div> 
+                 )             
+           })}
+            </Grid> 
+          </Paper>
+          
+        </Grid> 
+  )
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,45 +71,5 @@ const useStyles = makeStyles((theme) => ({
     width:'100%'
   }
 }))
-
-const ReleasedBundles = () => {
-  const classes = useStyles()
-
-  
-  const bundles = useSelector(state => state.bundles.bundles)
-
-  const dispatch = useDispatch()
-
-  
-  return (
-      <Grid item xs={12} container>
-         <Paper className={classes.paper}>       
-              <Typography variant='h4'>Currently Bundled</Typography>
-             <Grid>
-               {bundles.map((item, index) => {   
-                 return( 
-                 <div className={classes.bundle}>
-                   <div className={classes.bundleHeader}>
-                   <Typography variant='h5'>{item.title}</Typography>
-                   <div>
-                   <Button> print </Button>
-                   <Button variant="contained"  color='secondary' onClick={() => dispatch(deleteBundle(index))}>Delete</Button>
-                   </div>
-
-                   </div>
-                   
-                   {item?.items.map((item,index) => {
-
-          return <ItemCard key={index} data={item.item} isBundle={true} />
-                   })}
-                 </div> 
-                 )             
-           })}
-            </Grid> 
-          </Paper>
-          
-        </Grid> 
-  )
-}
 
 export default ReleasedBundles

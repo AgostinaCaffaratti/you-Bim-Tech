@@ -7,46 +7,29 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { CardHeader, Divider, TextField } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  root: {
-    width:'100%',
-    height:240,
-    marginTop:10,
-    marginBottom:10
-  },  
-  title: {
-    fontSize: 14,
-  },
-  content: {
-    height: 70
-  },
-  multiplier:{
-    width:'120px',
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center'
-  },
-  inputField:{
-    width:'100px'
-  }
-});
-
-export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle, isMultiple = false, setPrices = ()=>{}, prices=[]}) => {
 
 
-  const {code, description, price, type } = data
+export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle, isMultiple = false ,current=[], setTotal = ()=>{}, total}) => {
+
+
+  const { code, description, price, type } = data
+
+
   
   const classes = useStyles();
-
+  
   const [multiplierValue, setMultiplierValue] = useState(1)
-
+  
   const totalPartialPrice =  multiplierValue * parseInt(price)
+  data.tPrice = totalPartialPrice
+  data.multiplier = multiplierValue
 
-  const handleMultiplierChange = (e) => {
+  const handleMultiplierChange = async (e) => {
       const {  value } = e.target
   setMultiplierValue( value === '' ? 1 : parseInt(value))  
-  setPrices([...prices, totalPartialPrice])
+  const totalBundlePrice = await current.reduce((a, b) =>  a+= b.item.tPrice ,0)
+setTotal(totalBundlePrice)
+  
 }
 
   return (
@@ -54,7 +37,7 @@ export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle,
     <CardHeader title={code}
     action={
       isAvailable ? <Button onClick={addCurrent}>Add to Bundle</Button> : 
-         isBundle ? <Typography variant='h4'>${price}</Typography> : <Button variant="contained"  color='secondary' onClick={deleteItem}>Delete</Button>
+         isBundle ? <Typography variant='h4'>${total}</Typography> : <Button variant="contained"  color='secondary' onClick={deleteItem}>Delete</Button>
         }>
     </CardHeader>
     <Divider ></Divider>
@@ -81,8 +64,30 @@ export const ItemCard = ({data,  deleteItem, isAvailable, addCurrent,  isBundle,
          null } 
       </CardContent>
       <CardActions>
-        {/* <Button size="small">Learn More</Button> */}
       </CardActions>
     </Card>
   );
 }
+const useStyles = makeStyles({
+  root: {
+    width:'100%',
+    marginTop:10,
+    marginBottom:10
+  },  
+  title: {
+    fontSize: 14,
+  },
+  content: {
+    height: 'auto'
+  },
+  multiplier:{
+    width:'120px',
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+  },
+  inputField:{
+    width:'100px'
+  }
+});

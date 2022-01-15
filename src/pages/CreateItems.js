@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import NewItemForm from '../components/NewItemForm'
-import { Box, Paper } from '@material-ui/core'
+import {  Paper } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import {useDispatch, useSelector} from 'react-redux'
 import {deleteItem } from '../state/reducer'
@@ -13,7 +13,6 @@ const CreateItems = () => {
   const classes = useStyles()
 
   const items = useSelector (state => state.items.items)  
-
   const dispatch = useDispatch()
 
   return (

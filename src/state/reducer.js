@@ -60,4 +60,5 @@ export const bundleReducer = (state = initBundleState, action) => {
       payload: index     
     }
   }
+
   

@@ -4,44 +4,26 @@ import Grid from '@material-ui/core/Grid'
 import { Button, Paper, TextField, Typography } from '@material-ui/core'
 import { ItemCard } from '../components/ItemCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteItem, addBundle} from '../state/reducer'
+import { deleteItem, addBundle, addcurrentlyBundled, deletecurrentlyBundled} from '../state/reducer'
 
-const useStyles = makeStyles((theme) => ({
 
-  paper: {
-    margin:'20px',
-    textAlign: 'left',
-    color: theme.palette.text.secondary,
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    minHeight:'100vh',
-    padding:'20px'
-  },
-  items:{
-    width:'49%',
-  },
-
-  button :{
-    marginTop:20
-  }
-}))
 
 const CreateBundle = () => {
   const classes = useStyles()
 
   const items = useSelector((state) => state.items.items)
-console.log('items',items)
+
+
   const [isAvailable, setIsAvailable] = useState(false)
 
-  const [current, setCurrent] = useState([])
-console.log('currently bundled',current)
+const [current, setCurrent] = useState([])
 
-  const [prices, setPrices] = useState([])
-  console.log('partialPrices', prices)
 
+  const [total, setTotal] = useState(0)
 
   const [title, setTitle] = useState('')
+
+
 
   const dispatch = useDispatch()
 
@@ -49,21 +31,20 @@ console.log('currently bundled',current)
     setIsAvailable(true)
   }, [])
 
-  const handleCurrent = useCallback((item) => {
+  const totalBundlePrice = current.reduce((a, b) =>  a+= b.item.tPrice ,0)
+
+
+  const handleCurrent = (item) => {   
     setCurrent([...current, item])
-    const itemPrice = parseInt(item.item.price)
-    setPrices([...prices, itemPrice])
-  },[current,prices]) 
+    setTotal(totalBundlePrice)
+  }
 
-  const totalPrice = useMemo(()=> prices.reduce((a, b) => a + b, 0),[prices]) ;
+  const addToBundle = useCallback(  () => {
+  dispatch(addBundle({title: title, items: current}))    
+  setCurrent([])
 
-
-  const addToBundle = useCallback( (item) => {
-    dispatch(addBundle({title: title, items: current, totalPrice: totalPrice}))
-    setCurrent([])
     setTitle('')
-    
-  },[current,dispatch,title,totalPrice])
+  },[current,dispatch,title,])
 
   const deleteCurrent = useCallback((code) => {
     const updatedCurrents = current.filter((item) => item.item.code !== code )
@@ -105,14 +86,16 @@ setTitle(value)  },[])
                       data={item.item}
                       deleteItem={() => deleteCurrent(item.item.code)}
                       isMultiple={ item.item.type === 'multiple'}
-                      setPrices={setPrices}
-                      prices={prices}
+                      current={current}
+                      setTotal={setTotal} 
+                      // setPrices={setPrices}
+                      // prices={prices}
 
                     />
                   )
                 })}
               </Grid>
-              <Typography variant='h4'>${totalPrice}</Typography>
+              <Typography variant='h4'>${totalBundlePrice}</Typography>
               <Grid className={classes.fieldContainer}>           
               <Typography>Bundle Name</Typography>           
             <TextField  required variant="outlined" value={title} name="title" onChange={handleChange} className={classes.inputField} />
@@ -126,5 +109,26 @@ setTitle(value)  },[])
       </Paper>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+
+  paper: {
+    margin:'20px',
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    minHeight:'100vh',
+    padding:'20px'
+  },
+  items:{
+    width:'49%',
+  },
+
+  button :{
+    marginTop:20
+  }
+}))
 
 export default CreateBundle

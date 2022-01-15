@@ -4,13 +4,13 @@ import App from './App'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
-import {bundleReducer, itemReducer} from './state/reducer'
+import {bundleReducer,  itemReducer} from './state/reducer'
 
 
 
 const store = createStore(combineReducers({
   items:itemReducer,
-  bundles: bundleReducer
+  bundles: bundleReducer,
 }), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 
